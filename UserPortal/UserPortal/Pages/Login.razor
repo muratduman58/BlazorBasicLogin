@@ -1,0 +1,65 @@
+﻿@layout LoginLayout
+@inject ILogin _login
+@page "/Home"
+@using UserPortal.Interfaces.Login
+
+<MudContainer>
+    <MudPaper Class="login-container">
+
+
+        <MudGrid>
+            <MudItem xs="12">
+                <MudTextField T="string" Label="Kullanıcı Adı" Required="true" RequiredError="Kullanıcı adı zorunludur!" @bind-Value="@UserName"/>
+                <MudTextField T="string" Label="Şifre" Required="true" RequiredError="Şifre zorunludur!" @bind-Value="@PassWord"/>
+            </MudItem>
+
+        </MudGrid>
+        <MudButton Variant="Variant.Filled" Color="Color.Primary" @onclick="@LoginClick" Class="login-button">
+            Giriş Yap
+        </MudButton>
+    </MudPaper>
+</MudContainer>
+
+<style>
+    .login-container {
+        width: 500px;
+        padding: 20px;
+        margin: auto;
+        margin-top: 100px;
+    }
+
+    .login-header {
+        text-align: center;
+        margin-bottom: 20px;
+    }
+
+    .login-input {
+        margin-bottom: 15px;
+    }
+
+    .login-button {
+        margin-top: 20px;
+        width: 100%;
+    }
+</style>
+
+@code {
+    public string UserName;
+    public string PassWord;
+    public async Task LoginClick()
+    {
+        if (!String.IsNullOrEmpty(UserName) && !String.IsNullOrEmpty(PassWord))
+        {
+            var res = await _login.UserLogin(UserName, PassWord, "");
+            if (res.isOk)
+            {
+                //yönlendir
+            }
+            else
+            {
+                //uyarı ver
+            }
+        }
+        
+    }
+}

@@ -1,0 +1,46 @@
+﻿namespace UserPortal.Models.User
+{
+    public class UserListResponseModel
+    {
+        public bool success { get; set; }
+        public List<UserData> data { get; set; }
+        public int totalRowCount { get; set; }
+        public class UserData
+        {
+            public int CardId { get; set; }
+            public int CardTypeId { get; set; }
+            public string CardTypeDescr { get; set; }
+            public string CardName { get; set; }
+            public bool CardIsMale { get; set; }
+            public string CardTitleCode { get; set; }
+            public string CardProfessionCode { get; set; }
+            public bool CardIsInList { get; set; }
+            public string CardMobilePhone { get; set; }
+            public string CardStatus { get; set; }
+            public bool MsisdnConsent { get; set; }
+            public string ConsentStatus { get; set; }
+            public bool SmsConsent { get; set; }
+            public bool CallConsent { get; set; }
+            public bool EmailConsent { get; set; }
+            public string CardIdLocationId { get; set; }
+            public int LocationId { get; set; }
+            public string LocationName { get; set; }
+            public string LocationPhone { get; set; }
+            public string LocationBrickDescr { get; set; }
+            public int LocationTypeId { get; set; }
+            public bool IsPharmacy { get; set; }
+            public bool IsInMyList { get; set; }
+            public string PropertyFrequency { get; set; }
+            public string PropertySegment { get; set; }
+            public int ThisMonthPlanCount { get; set; }
+            public int ThisMonthRealizedPlanCount { get; set; }
+            public int YtdPlanCount { get; set; }
+            public int YtdRealizedPlanCount { get; set; }
+            public double RealizedCountAvg { get; set; }
+        }
+
+      
+
+
+    }
+}

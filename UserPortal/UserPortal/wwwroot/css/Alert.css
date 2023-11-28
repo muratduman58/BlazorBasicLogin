@@ -1,0 +1,49 @@
+﻿/*.SweetCustom {
+    width: 400px !important;
+    height: 400px !important;
+    font-size: 1.6rem !important;
+}*/
+/ /* SweetAlert Container */
+.custom-sweetalert-container {
+    background-color: #3498db;
+    border: 2px solid #2980b9;
+    border-radius: 10px;
+}
+
+/* SweetAlert Title */
+.custom-sweetalert-title {
+    color: #fff;
+    font-size: 24px;
+    text-align: center;
+}
+
+/* SweetAlert Content */
+.custom-sweetalert-content {
+    color: #fff;
+    font-size: 16px;
+    text-align: center;
+}
+
+/* SweetAlert Confirm Button */
+.custom-sweetalert-button.confirm {
+    background-color: #0299de;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    padding: 10px 20px;
+    font-size: 18px;
+}
+
+/* SweetAlert Cancel Button */
+.custom-sweetalert-button.cancel {
+    background-color: #9b59b6;
+}
+
+/* Hover effect for the Confirm and Cancel Buttons */
+.custom-sweetalert-button.confirm:hover {
+    background-color: #0050a3;
+}
+
+.custom-sweetalert-button.cancel:hover {
+    background-color: #8e44ad;
+}

@@ -2,8 +2,7 @@
 {
     public class UserResponseModel
     {
-        public bool success { get; set; }
-        public UserData data { get; set; }
+        // Root myDeserializedClass = JsonConvert.DeserializeObject<Root>(myJsonResponse);
         public class BusinessRule
         {
             public int Key { get; set; }
@@ -20,7 +19,7 @@
             public string Status { get; set; }
         }
 
-        public class UserData
+        public class Data
         {
             public string UserId { get; set; }
             public string CurrentUserId { get; set; }
@@ -49,6 +48,14 @@
             public int ExternalUserType { get; set; }
         }
 
-      
+        public class User
+        {
+            public bool success { get; set; }
+            public Data data { get; set; }
+        }
+
+
+
+
     }
 }

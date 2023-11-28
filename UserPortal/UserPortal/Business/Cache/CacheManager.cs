@@ -12,9 +12,10 @@ namespace UserPortal.Business.Cache
         private readonly ISessionStorageService _sesion;
 
 
-        public CacheManager(IMemoryCache memoryCache, ILocalStorageService local)
+        public CacheManager(IMemoryCache memoryCache, ILocalStorageService local, ISessionStorageService sesion)
         {
             _memoryCache = memoryCache;
+            _sesion = sesion;
             _local = local;
         }
 
@@ -30,7 +31,7 @@ namespace UserPortal.Business.Cache
 
                 throw;
             }
-          
+
         }
 
         public async Task<object> GetBrowserSesionCache(string key)

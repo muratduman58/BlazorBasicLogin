@@ -3,6 +3,7 @@ using UserPortal.Interfaces.Cache;
 using UserPortal.Interfaces.Login;
 using UserPortal.Models.Generic;
 using UserPortal.Models.Login;
+using UserPortal.Models.User;
 
 namespace UserPortal.Business.Login
 {
@@ -32,7 +33,13 @@ namespace UserPortal.Business.Login
                     res.isOk = true;
                     _cache.SetValue(username, username, DateTime.Now.AddMinutes(10));
                     var usr = await _api.GetUserMobile();
-                 
+                    if (usr != null && usr.isOk)
+                    {
+                        UserResponseModel.User user = (UserResponseModel.User)usr.Model;
+                        await _cache.SetBrowserSesionCache("LoggedInUser", user.data);
+                    }
+
+
                 }
                 else
                 {

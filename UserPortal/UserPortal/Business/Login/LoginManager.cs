@@ -31,12 +31,14 @@ namespace UserPortal.Business.Login
                 if (res.isOk)
                 {
                     res.isOk = true;
-                    _cache.SetValue(username, username, DateTime.Now.AddMinutes(10));
                     var usr = await _api.GetUserMobile();
+                    UserResponseModel.User user = (UserResponseModel.User)usr.Model;
+                    await _cache.SetValue(username, user.data, DateTime.Now.AddMinutes(60));
+
                     if (usr != null && usr.isOk)
                     {
-                        UserResponseModel.User user = (UserResponseModel.User)usr.Model;
-                        await _cache.SetBrowserSesionCache("LoggedInUser", user.data);
+
+                        await _cache.SetBrowserSesionCache("LoggedInUser", username);
                     }
 
 

@@ -19,11 +19,11 @@ namespace UserPortal.Business.Cache
             _local = local;
         }
 
-        public async Task<object> GetBrowserLocalCache(string key)
+        public async Task<string> GetBrowserLocalCache(string key)
         {
             try
             {
-                var data = await _local.GetItemAsync<object>(key);
+                var data = await _local.GetItemAsync<string>(key);
                 return data;
             }
             catch (Exception ex)
@@ -34,11 +34,11 @@ namespace UserPortal.Business.Cache
 
         }
 
-        public async Task<object> GetBrowserSesionCache(string key)
+        public async Task<string> GetBrowserSesionCache(string key)
         {
             try
             {
-                var data = await _sesion.GetItemAsync<object>(key);
+                var data = await _sesion.GetItemAsync<string>(key);
                 return data;
             }
             catch (Exception ex)
@@ -64,11 +64,11 @@ namespace UserPortal.Business.Cache
 
         }
 
-        public async Task SetBrowserLocalCache(string key, object value)
+        public async Task SetBrowserLocalCache(string key, string value)
         {
             try
             {
-                await _local.SetItemAsync<object>(key, value);
+                await _local.SetItemAsync<string>(key, value);
 
             }
             catch (Exception ex)
@@ -78,11 +78,11 @@ namespace UserPortal.Business.Cache
             }
         }
 
-        public async Task SetBrowserSesionCache(string key, object value)
+        public async Task SetBrowserSesionCache(string key, string value)
         {
             try
             {
-                await _sesion.SetItemAsync<object>(key, value);
+                await _sesion.SetItemAsync<string>(key, value);
             }
             catch (Exception ex)
             {

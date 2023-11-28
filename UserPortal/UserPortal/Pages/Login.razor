@@ -1,7 +1,9 @@
 ﻿@layout LoginLayout
 @inject ILogin _login
-@page "/Home"
+@inject NavigationManager _Nav
+@page "/"
 @using UserPortal.Interfaces.Login
+
 
 <MudContainer>
     <MudPaper Class="login-container">
@@ -44,8 +46,8 @@
 </style>
 
 @code {
-    public string UserName;
-    public string PassWord;
+    public string UserName = "demo607";
+    public string PassWord = "1234567";
     public async Task LoginClick()
     {
         if (!String.IsNullOrEmpty(UserName) && !String.IsNullOrEmpty(PassWord))
@@ -53,6 +55,7 @@
             var res = await _login.UserLogin(UserName, PassWord, "");
             if (res.isOk)
             {
+                _Nav.NavigateTo("/Home");
                 //yönlendir
             }
             else

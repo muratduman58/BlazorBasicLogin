@@ -1,19 +1,35 @@
-﻿<MudPaper Width="250px" Class="py-3" Elevation="0">
-    <MudNavMenu>
-        <MudImage Src="/img/user_icon.png" Fluid="true" Elevation="20" Class="rounded-lg" Style="max-width:50%;height:auto;"  />
-        <MudText Typo="Typo.h6" Class="px-4">My Application</MudText>
-        <MudText Typo="Typo.body2" Class="px-4 mud-text-secondary">Secondary Text</MudText>
-        <MudDivider Class="my-2" />
-        <MudNavLink Href="/dashboard">Dashboard</MudNavLink>
-        <MudNavLink Href="/servers">Servers</MudNavLink>
-        <MudNavLink Href="/billing" Disabled="true">Billing</MudNavLink>
-        <MudNavGroup Title="Settings" Expanded="true">
-            <MudNavLink Href="/users">Users</MudNavLink>
-            <MudNavLink Href="/security">Security</MudNavLink>
-        </MudNavGroup>
-        <MudNavLink Href="/about">About</MudNavLink>
-    </MudNavMenu>
-</MudPaper>
-@code {
+﻿@using UserPortal.Models.User
+@inject ICache _cache
+@if (isLoaded)
+{
+    <MudPaper Width="250px" Class="py-3" Elevation="0">
+        <MudNavMenu>
+            <MudImage Src="/img/user_icon.png" Fluid="true" Elevation="20" Class="rounded-lg" Style="max-width:50%;height:auto;" />
+            <MudText Typo="Typo.h6" Class="px-4">@user.FullName</MudText>
+                <MudText Typo="Typo.body2" Class="px-4 mud-text-secondary">@user.PositionDescription</MudText>
+                <MudDivider Class="my-2" />
+                <MudNavLink Href="/Users" Icon="@Icons.Material.Filled.People" IconColor="Color.Success">Users</MudNavLink>
+               
+            </MudNavMenu>
+        </MudPaper>
+}
 
+@code {
+    UserResponseModel.Data user;
+    bool isLoaded = false;
+    protected override async Task OnInitializedAsync()
+    {
+
+
+    }
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        string lgn = await _cache.GetBrowserSesionCache("LoggedInUser");
+        var usr = await _cache.GetValue(lgn);
+        user = (UserResponseModel.Data)usr;
+        isLoaded = true;
+        StateHasChanged();
+
+
+    }
 }

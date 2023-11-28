@@ -5,9 +5,9 @@
         public Task SetValue(string key, object value,DateTime expireTime);
 
         public Task<object> GetValue(string key);
-        public Task SetBrowserSesionCache(string key,object value);
-        public Task SetBrowserLocalCache(string key,object value);
-        public Task<object> GetBrowserLocalCache(string key);
-        public Task<object> GetBrowserSesionCache(string key);
+        public Task SetBrowserSesionCache(string key,string value);
+        public Task SetBrowserLocalCache(string key,string value);
+        public Task<string> GetBrowserLocalCache(string key);
+        public Task<string> GetBrowserSesionCache(string key);
     }
 }

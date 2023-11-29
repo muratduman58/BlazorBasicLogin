@@ -11,13 +11,18 @@
   
     <link href="https://use.fontawesome.com/releases/v5.14.0/css/all.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap" rel="stylesheet" />
-    <link href="_content/MudBlazor/MudBlazor.min.css" rel="stylesheet" />
-    <script src="_content/MudBlazor/MudBlazor.min.js"></script>
+    <link href="_content/MudBlazor/MudBlazor.min.css" rel="stylesheet" /> 
+    <link href="//cdn.datatables.net/1.13.7/css/jquery.dataTables.min.css" rel="stylesheet" />
+  
     <component type="typeof(HeadOutlet)" render-mode="ServerPrerendered" />
 </head>
 <body>
     @RenderBody()
     <script src="_framework/blazor.server.js"></script>
-    
+    <script src="_content/MudBlazor/MudBlazor.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
+    <script src="//cdn.datatables.net/1.13.7/js/jquery.dataTables.min.js"></script>
+ 
+    <script src="~/js/Custom.js"></script>
 </body>
 </html>

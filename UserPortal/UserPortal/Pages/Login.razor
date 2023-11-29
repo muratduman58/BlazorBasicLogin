@@ -1,6 +1,7 @@
 ﻿@layout LoginLayout
 @inject ILogin _login
 @inject NavigationManager _Nav
+@inject IJSRuntime JSRuntime
 @page "/"
 @using UserPortal.Interfaces.Login
 
@@ -60,7 +61,7 @@
             }
             else
             {
-                //uyarı ver
+                //IJSRuntime.InvokeVoidAsync("SweetError", "Hata", "Doğrulamada hata oluştu");
             }
         }
         

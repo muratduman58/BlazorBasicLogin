@@ -1,4 +1,11 @@
 ﻿@page "/Users"
+@using UserPortal.Interfaces.User
+@using UserPortal.Models.User
+@inject IUser _usr
+@inject IJSRuntime JSRuntime
+@inject ISnackbar Snackbar
+@inject IDialogService DialogService
+
 <MudCard>
     <MudCardHeader>
         <CardHeaderContent>
@@ -7,12 +14,107 @@
 
     </MudCardHeader>
     <MudCardContent>
+        @if (isLoaded)
+        {
+
+            <table id="userTable" class="display" style="width:100%">
+                <thead>
+                    <tr>
+                        <th>Ad Soyad</th>
+                        <th>Ünvan</th>
+                        <th>Konum</th>
+                        <th>Konum Adı</th>
+                        <th>Telefon</th>
+
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Userlist)
+                    {
+                        <tr>
+                            <td>@item.CardName</td>
+                            <td>@item.CardTypeDescr</td>
+                            <td>@item.LocationBrickDescr</td>
+                            <td>@item.LocationName</td>
+                            <td>@item.LocationPhone</td>
+
+                        </tr>
+                    }
+
+
+                </tbody>
+            </table>
+
+            <MudCardActions>
+                <MudButton Variant="Variant.Filled" StartIcon="@Icons.Material.Filled.Add" Color="Color.Error" @onclick="@ShowAddUserDialog">Kişi Ekle</MudButton>
+            </MudCardActions>
+        }
+        else
+
+        {
+            <div class="docs-section-content-inner relative d-flex flex-grow-1 flex-wrap justify-center align-center px-8 pb-8 pt-2">
+                <MudProgressCircular Color="Color.Info" Indeterminate="true" />
+            </div>
+
+        }
 
     </MudCardContent>
-    <MudCardActions>
-        <MudButton Variant="Variant.Filled" StartIcon="@Icons.Material.Filled.Add" Color="Color.Error">Kişi Ekle</MudButton>
-    </MudCardActions>
+
 </MudCard>
 @code {
+    bool isLoaded = false;
+    public List<UserListResponseModel.UserData> Userlist;
+    [CascadingParameter] MudDialogInstance MudDialog { get; set; }
 
+
+    async Task ShowAddUserDialog()
+    {
+        var options = new DialogOptions { CloseOnEscapeKey = true };
+        options.MaxWidth = MaxWidth.ExtraExtraLarge;
+        var dialog = await DialogService.ShowAsync<AddUserDialog>("", options);
+        var result = await dialog.Result;
+        if (!result.Canceled)
+        {
+            UserListResponseModel.UserData usr = (UserListResponseModel.UserData)result.Data;
+            Userlist.Add(usr);
+
+            StateHasChanged();
+            await JSRuntime.InvokeVoidAsync("getTable", "#userTable");
+            Snackbar.Add("Kullanıcı Eklendi", Severity.Success);
+          
+          
+        }
+    }
+    protected override async Task OnInitializedAsync()
+    {
+
+        try
+        {
+            var res = await _usr.GetUserList();
+            if (res.isOk)
+            {
+                Userlist = (List<UserListResponseModel.UserData>)res.Model;
+                base.OnInitialized();
+            }
+        }
+        catch (Exception ex)
+        {
+
+            throw;
+        }
+    }
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+
+        if (Userlist != null)
+        {
+            isLoaded = true;
+
+            await JSRuntime.InvokeVoidAsync("getTable", "#userTable");
+            StateHasChanged();
+        }
+
+
+
+    }
 }

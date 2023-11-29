@@ -1,18 +1,31 @@
-﻿using UserPortal.Interfaces.User;
+﻿using UserPortal.Interfaces.Api;
+using UserPortal.Interfaces.User;
 using UserPortal.Models.Generic;
+using UserPortal.Models.User;
 
 namespace UserPortal.Business.User
 {
     public class UserManager : IUser
     {
-        public async Task<GenericResponseModel> GetUser()
-        {
-            throw new NotImplementedException();
+        private readonly IApiManager _api;
+        public UserManager(IApiManager api) 
+        { 
+            _api = api;
         }
-
-        public Task<GenericResponseModel> GetUserList()
+       
+        public async Task<GenericResponseModel> GetUserList()
         {
-            throw new NotImplementedException();
+            GenericResponseModel responseModel;
+            try
+            {
+             responseModel = await _api.GetListMobile();
+            }
+            catch (Exception ex)
+            {
+
+                throw;
+            }
+            return responseModel;
         }
     }
 }

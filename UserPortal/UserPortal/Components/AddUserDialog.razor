@@ -1,0 +1,53 @@
+﻿@using UserPortal.Models.User
+
+<MudDialog>
+    <TitleContent>
+        <MudText Typo="Typo.h4">
+            <MudIcon Icon="@Icons.Material.Filled.SupervisedUserCircle" Class="mr-3 mb-n1" />
+            Kullanıcı Ekleme
+        </MudText>
+    </TitleContent>
+    <DialogContent>
+
+        <MudTextField @bind-Value="@CardName" Label="Ad Soyad" />
+        <MudTextField @bind-Value="@CardTypeDescr" Label="Ünvan" />
+        <MudTextField @bind-Value="@LocationBrickDescr" Label="Konum"/>
+        <MudTextField @bind-Value="@LocationName" Label="Konum Adı" />
+        <MudTextField @bind-Value="@LocationPhone" Label="Telefon"/>
+
+    </DialogContent>
+    <DialogActions>
+        <MudButton OnClick="Cancel">İptal</MudButton>
+        <MudButton Color="Color.Error" OnClick="AddUser">Ekle</MudButton>
+    </DialogActions>
+</MudDialog>
+@code {
+    [CascadingParameter] MudDialogInstance MudDialog { get; set; }
+
+
+
+    public string CardName { get; set; }
+    public string CardTypeDescr { get; set; }
+    public string LocationBrickDescr { get; set; }
+    public string LocationName { get; set; }
+    public string LocationPhone { get; set; }
+
+
+
+    private void Cancel()
+    {
+        MudDialog.Cancel();
+
+    }
+
+    private void AddUser()
+    {
+        UserListResponseModel.UserData userData = new UserListResponseModel.UserData();
+        userData.CardName = this.CardName;
+        userData.CardTypeDescr = this.CardTypeDescr;
+        userData.LocationBrickDescr = this.LocationBrickDescr;
+        userData.LocationName = this.LocationName;
+        userData.LocationPhone = this.LocationPhone;
+        MudDialog.Close(DialogResult.Ok(userData));
+    }
+}

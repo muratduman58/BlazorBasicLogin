@@ -7,6 +7,8 @@ using UserPortal.Interfaces.Cache;
 using UserPortal.Business.Cache;
 using Blazored.LocalStorage;
 using Blazored.SessionStorage;
+using UserPortal.Interfaces.User;
+using UserPortal.Business.User;
 
 
 var builder = WebApplication.CreateBuilder(args);
@@ -17,6 +19,7 @@ builder.Services.AddServerSideBlazor();
 builder.Services.AddScoped<ILogin, LoginManager>();
 builder.Services.AddScoped<IApiManager, ApiManager>();
 builder.Services.AddScoped<ICache,CacheManager>();
+builder.Services.AddScoped<IUser,UserManager>();
 builder.Services.AddMudServices();
 builder.Services.AddMemoryCache();
 builder.Services.AddBlazoredLocalStorage();

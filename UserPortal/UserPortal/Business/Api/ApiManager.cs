@@ -33,12 +33,13 @@ namespace UserPortal.Business.Api
 
                 RestRequest req = new RestRequest("/Card/GetListMobile", Method.Get);
 
-                var res = await client.GetAsync<UserListResponseModel>(req);
-
-                if (res != null && res.success == true)
+                req.AddHeader("Cookie", ".AspNet.ApplicationCookie=oLqMRPjVK8gNIuv0t-BRzD91Gj7VkYX_T86I9jX7I76NFNi0BAGejgGmgUlW-pocQfgmHw-FPWgkWNK7hvUwDp_-3Zt1i221kaxIEmM6UDLodHj6R6Qdwc0Wtiy3ZXkc5dZpxD3KdtD2tCSkUQnVCVQtU7Nmn83U9xMUkXkJVQ_jS9OLMUGnneVCJ0ZqBU_CeBgv7AIaTPaygUCCkIG7CbdVzIzO0IiSH6vlWaFU-zIjQCjQCqusON86EYQMyiScPvCy4uJr2NgtJiyD2c-eP0NO59k4jpLg9xvy9FOJTPdzDxdB; ASP.NET_SessionId=d2j2omtakr2di0azrbghag0e; language=tr-TR");
+                var res = await client.ExecuteAsync(req);
+                var usrlst = JsonConvert.DeserializeObject<UserListResponseModel>(res.Content);
+                if (res != null)
                 {
                     resModel.isOk = true;
-                    resModel.Model = res;
+                    resModel.Model = usrlst.data;
                 }
                 else
                 {

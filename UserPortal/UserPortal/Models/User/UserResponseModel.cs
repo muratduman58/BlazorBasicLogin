@@ -2,7 +2,7 @@
 {
     public class UserResponseModel
     {
-        // Root myDeserializedClass = JsonConvert.DeserializeObject<Root>(myJsonResponse);
+       
         public class BusinessRule
         {
             public int Key { get; set; }

@@ -46,7 +46,7 @@ namespace UserPortal.Business.Login
                 else
                 {
                     res.isOk = false;
-                    res.Message = "Kullanıcı Adı veya Şifre yanlış.";
+                    res.Model = (LoginResponse)res.Model;
                 }
 
 

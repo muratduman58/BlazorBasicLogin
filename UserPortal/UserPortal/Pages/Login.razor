@@ -1,9 +1,10 @@
 ﻿@layout LoginLayout
 @inject ILogin _login
 @inject NavigationManager _Nav
-@inject IJSRuntime JSRuntime
+@inject IJSRuntime _JSRuntime
 @page "/"
 @using UserPortal.Interfaces.Login
+@using UserPortal.Models.Login
 
 
 <MudContainer>
@@ -13,12 +14,13 @@
         <MudGrid>
             <MudItem xs="12">
                 <MudTextField T="string" Label="Kullanıcı Adı" Required="true" RequiredError="Kullanıcı adı zorunludur!" @bind-Value="@UserName"/>
-                <MudTextField T="string" Label="Şifre" Required="true" RequiredError="Şifre zorunludur!" @bind-Value="@PassWord"/>
+                <MudTextField T="string" Label="Şifre" Required="true" RequiredError="Şifre zorunludur!" @bind-Value="@PassWord" InputType="InputType.Password" />
             </MudItem>
 
         </MudGrid>
-        <MudButton Variant="Variant.Filled" Color="Color.Primary" @onclick="@LoginClick" Class="login-button">
-            Giriş Yap
+        <MudButton Variant="Variant.Filled" Color="Color.Primary" @onclick="@LoginClick" Class="login-button" Disabled="@isLoading">
+            Giriş Yap @if (isLoading){<MudProgressCircular Color="Color.Info" Indeterminate="true" />}
+           
         </MudButton>
     </MudPaper>
 </MudContainer>
@@ -49,19 +51,25 @@
 @code {
     public string UserName = "demo607";
     public string PassWord = "1234567";
+    public bool isLoading = false;
     public async Task LoginClick()
     {
         if (!String.IsNullOrEmpty(UserName) && !String.IsNullOrEmpty(PassWord))
         {
+            isLoading = true;
+            StateHasChanged();
             var res = await _login.UserLogin(UserName, PassWord, "");
             if (res.isOk)
             {
                 _Nav.NavigateTo("/Home");
-                //yönlendir
+              
             }
             else
             {
-                //IJSRuntime.InvokeVoidAsync("SweetError", "Hata", "Doğrulamada hata oluştu");
+                isLoading = false;
+                StateHasChanged();
+                LoginResponse lgnres = (LoginResponse)res.Model;
+                await _JSRuntime.InvokeVoidAsync("SweetError", "Hata", lgnres.errorMsg);
             }
         }
         

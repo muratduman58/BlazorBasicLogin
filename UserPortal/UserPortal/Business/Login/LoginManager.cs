@@ -1,4 +1,5 @@
-﻿using UserPortal.Interfaces.Api;
+﻿using System.ComponentModel.Design;
+using UserPortal.Interfaces.Api;
 using UserPortal.Interfaces.Cache;
 using UserPortal.Interfaces.Login;
 using UserPortal.Models.Generic;
@@ -31,14 +32,20 @@ namespace UserPortal.Business.Login
                 if (res.isOk)
                 {
                     res.isOk = true;
+                    await _cache.SetBrowserSesionCache("LoggedInUser", username);
                     var usr = await _api.GetUserMobile();
                     UserResponseModel.User user = (UserResponseModel.User)usr.Model;
-                    await _cache.SetValue(username, user.data, DateTime.Now.AddMinutes(60));
+                  
 
                     if (usr != null && usr.isOk)
                     {
 
-                        await _cache.SetBrowserSesionCache("LoggedInUser", username);
+                        await _cache.SetValue(username, user.data, DateTime.Now.AddDays(5));
+                    }
+                    else
+                    {
+                        res.isOk = false;
+                        res.Model = (LoginResponse)res.Model;
                     }
 
 

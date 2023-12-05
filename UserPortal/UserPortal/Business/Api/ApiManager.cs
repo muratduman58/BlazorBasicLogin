@@ -8,22 +8,39 @@ using static UserPortal.Models.User.UserResponseModel;
 using System.Text.Json.Serialization;
 using Newtonsoft.Json;
 using System.Runtime.ConstrainedExecution;
+using UserPortal.Interfaces.Cache;
+using System.Net;
 
 namespace UserPortal.Business.Api
 {
     public class ApiManager : IApiManager
     {
         private readonly IConfiguration _config;
+        private readonly ICache _cache;
         public string ApiUrl;
         public string ServiceLevel;
 
-        public ApiManager(IConfiguration configuration)
+        public ApiManager(IConfiguration configuration, ICache cache)
         {
+            _cache = cache;
             _config = configuration;
             ServiceLevel = _config["ServiceLevel"].ToString();
             ApiUrl = _config["ApiUrls:" + ServiceLevel + ":ApiUrl"].ToString();
         }
 
+        public async Task<string> GetCookie()
+        {
+            var lgnusr = await _cache.GetBrowserSesionCache("LoggedInUser");
+            CookieCollection cke = (CookieCollection)await _cache.GetValue(lgnusr + "Cookie");
+            var cookieList = new List<string>();
+
+            foreach (Cookie cookie in cke)
+            {
+                cookieList.Add($"{cookie.Name}={cookie.Value}");
+            }
+
+            return string.Join("; ", cookieList);
+        }
         public async Task<GenericResponseModel> GetListMobile()
         {
             GenericResponseModel resModel = new GenericResponseModel();
@@ -33,7 +50,8 @@ namespace UserPortal.Business.Api
 
                 RestRequest req = new RestRequest("/Card/GetListMobile", Method.Get);
 
-                req.AddHeader("Cookie", ".AspNet.ApplicationCookie=oLqMRPjVK8gNIuv0t-BRzD91Gj7VkYX_T86I9jX7I76NFNi0BAGejgGmgUlW-pocQfgmHw-FPWgkWNK7hvUwDp_-3Zt1i221kaxIEmM6UDLodHj6R6Qdwc0Wtiy3ZXkc5dZpxD3KdtD2tCSkUQnVCVQtU7Nmn83U9xMUkXkJVQ_jS9OLMUGnneVCJ0ZqBU_CeBgv7AIaTPaygUCCkIG7CbdVzIzO0IiSH6vlWaFU-zIjQCjQCqusON86EYQMyiScPvCy4uJr2NgtJiyD2c-eP0NO59k4jpLg9xvy9FOJTPdzDxdB; ASP.NET_SessionId=d2j2omtakr2di0azrbghag0e; language=tr-TR");
+               
+                req.AddHeader("Cookie", await GetCookie());
                 var res = await client.ExecuteAsync(req);
                 var usrlst = JsonConvert.DeserializeObject<UserListResponseModel>(res.Content);
                 if (res != null)
@@ -62,12 +80,13 @@ namespace UserPortal.Business.Api
             GenericResponseModel resModel = new GenericResponseModel();
             try
             {
-             
 
+            
                 RestClient client = new RestClient(ApiUrl);
 
                 RestRequest req = new RestRequest("/Account/GetUserMobile", Method.Get);
-                req.AddHeader("Cookie", ".AspNet.ApplicationCookie=oLqMRPjVK8gNIuv0t-BRzD91Gj7VkYX_T86I9jX7I76NFNi0BAGejgGmgUlW-pocQfgmHw-FPWgkWNK7hvUwDp_-3Zt1i221kaxIEmM6UDLodHj6R6Qdwc0Wtiy3ZXkc5dZpxD3KdtD2tCSkUQnVCVQtU7Nmn83U9xMUkXkJVQ_jS9OLMUGnneVCJ0ZqBU_CeBgv7AIaTPaygUCCkIG7CbdVzIzO0IiSH6vlWaFU-zIjQCjQCqusON86EYQMyiScPvCy4uJr2NgtJiyD2c-eP0NO59k4jpLg9xvy9FOJTPdzDxdB; ASP.NET_SessionId=d2j2omtakr2di0azrbghag0e; language=tr-TR");
+                req.AddHeader("Content-Type", "application/json");
+                req.AddHeader("Cookie", await GetCookie());
                 var res = await client.ExecuteAsync(req);
                 var usr = JsonConvert.DeserializeObject<UserResponseModel.User>(res.Content);
 
@@ -90,7 +109,7 @@ namespace UserPortal.Business.Api
                 resModel.Message = ex.Message;
                 return resModel;
             }
-            
+
         }
 
         public async Task<GenericResponseModel> Login(LoginRequest LoginReq)
@@ -98,18 +117,24 @@ namespace UserPortal.Business.Api
             GenericResponseModel resModel = new GenericResponseModel();
             try
             {
-               
-               
+
+
                 RestClient client = new RestClient(ApiUrl);
 
                 RestRequest req = new RestRequest("/Account/Login", Method.Post);
                 req.AddJsonBody(LoginReq);
 
-                var res = await client.PostAsync<LoginResponse>(req);
-                if (res != null && res.success == true)
+
+                var res = await client.ExecuteAsync(req);
+
+
+                if (res != null && res.StatusCode == System.Net.HttpStatusCode.OK)
                 {
+                    var cookie = res.Cookies;
+                    await _cache.SetValue(LoginReq.username + "Cookie", cookie, DateTime.Now.AddDays(5));
+                    LoginResponse resmdl = JsonConvert.DeserializeObject<LoginResponse>(res.Content);
                     resModel.isOk = true;
-                    resModel.Model = res;
+                    resModel.Model = resmdl;
                 }
                 else
                 {
@@ -123,9 +148,9 @@ namespace UserPortal.Business.Api
                 resModel.isOk = false;
                 resModel.Message = ex.Message;
                 return resModel;
-               
+
             }
-           
+
         }
     }
 }
